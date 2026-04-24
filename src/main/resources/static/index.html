@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Item Management Server</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="container">
+    <h1>Server</h1>
+    <p>Welcome to the Item Management System. This server provides CRUD operations for managing items.</p>
+
+    <div class="card">
+        <h2>Available Endpoints</h2>
+        <ul>
+            <li><strong>GET /items</strong> - Get all items</li>
+            <li><strong>GET /items?id=1</strong> - Get item by ID</li>
+            <li><strong>GET /items/1</strong> - Get item by ID (RESTful)</li>
+            <li><strong>POST /items</strong> - Create new item</li>
+            <li><strong>PUT /items</strong> - Update existing item</li>
+            <li><strong>DELETE /items?id=1</strong> - Delete item by ID</li>
+            <li><strong>DELETE /items/1</strong> - Delete item by ID (RESTful)</li>
+        </ul>
+    </div>
+
+    <div class="card">
+        <h2>API Testing</h2>
+        <div class="api-test">
+            <h3>Create Item</h3>
+            <textarea id="createItem" rows="6">{
+                "name": "Test Item",
+                "description": "Item description",
+                "price": 30.50,
+                "category": "Test",
+                "quantity": 10
+            }</textarea>
+            <button onclick="createItem()">POST /items</button>
+            <pre id="createResult"></pre>
+        </div>
+
+        <div class="api-test">
+            <h3>Get All Items</h3>
+            <button onclick="getAllItems()">GET /items</button>
+            <pre id="getAllResult"></pre>
+        </div>
+
+        <div class="api-test">
+            <h3>Get Item by ID</h3>
+            <input type="number" id="itemId" placeholder="Enter item ID" min="1">
+            <button onclick="getItemById()">GET /items/{id}</button>
+            <pre id="getByIdResult"></pre>
+        </div>
+    </div>
+
+    <div class="card">
+        <h2>Quick Links</h2>
+        <a href="/items" class="button">View All Items (HTML)</a>
+        <a href="/items" class="button" data-accept="application/json">View All Items (JSON)</a>
+    </div>
+</div>
+
+<script>
+    async function createItem() {
+        const json = document.getElementById('createItem').value;
+        try {
+            const response = await fetch('/items', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: json
+            });
+            const result = await response.json();
+            document.getElementById('createResult').textContent = JSON.stringify(result, null, 2);
+        } catch (error) {
+            document.getElementById('createResult').textContent = 'Error: ' + error.message;
+        }
+    }
+
+    async function getAllItems() {
+        try {
+            const response = await fetch('/items', {
+                headers: {
+                    'Accept': 'application/json'
+                }
+            });
+            const result = await response.json();
+            document.getElementById('getAllResult').textContent = JSON.stringify(result, null, 2);
+        } catch (error) {
+            document.getElementById('getAllResult').textContent = 'Error: ' + error.message;
+        }
+    }
+
+    async function getItemById() {
+        const id = document.getElementById('itemId').value;
+        if (!id) {
+            document.getElementById('getByIdResult').textContent = 'Please enter an ID';
+            return;
+        }
+        try {
+            const response = await fetch(`/items/${id}`, {
+                headers: {
+                    'Accept': 'application/json'
+                }
+            });
+            const result = await response.json();
+            document.getElementById('getByIdResult').textContent = JSON.stringify(result, null, 2);
+        } catch (error) {
+            document.getElementById('getByIdResult').textContent = 'Error: ' + error.message;
+        }
+    }
+</script>
+</body>
+</html>

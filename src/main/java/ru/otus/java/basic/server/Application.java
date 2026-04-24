@@ -1,6 +1,6 @@
-package ru.otus.java.basic;
+package ru.otus.java.basic.server;
 
-public class Main {
+public class Application {
     public static void main(String[] args) {
         System.out.println("Initial Project");
     }
