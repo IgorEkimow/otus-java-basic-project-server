@@ -37,10 +37,10 @@ public class ServerConfig {
                 config.maxResponseSize = Long.parseLong(props.getProperty("server.max-response-size", "10485760"));
                 config.staticFilesPath = props.getProperty("server.static-files-path", "static/");
                 config.dbHost = props.getProperty("db.host", "localhost");
-                config.dbPort = Integer.parseInt(props.getProperty("db.port", "5432"));
-                config.dbName = props.getProperty("db.name", "server-db");
-                config.dbUsername = props.getProperty("db.username", "postgres");
-                config.dbPassword = props.getProperty("db.password", "postgres");
+                config.dbPort = Integer.parseInt(props.getProperty("db.port", "15432"));
+                config.dbName = props.getProperty("db.name", "server_db");
+                config.dbUsername = props.getProperty("db.username", "server_user");
+                config.dbPassword = props.getProperty("db.password", "server_pass");
                 config.dbPoolSize = Integer.parseInt(props.getProperty("db.pool.size", "5"));
 
                 log.info("Configuration loaded successfully");
@@ -63,10 +63,10 @@ public class ServerConfig {
         config.maxResponseSize = 10 * 1024 * 1024;
         config.staticFilesPath = "static/";
         config.dbHost = "localhost";
-        config.dbPort = 5432;
-        config.dbName = "server-db";
-        config.dbUsername = "postgres";
-        config.dbPassword = "postgres";
+        config.dbPort = 15432;
+        config.dbName = "server_db";
+        config.dbUsername = "server_user";
+        config.dbPassword = "server_pass";
         config.dbPoolSize = 5;
     }
 }
