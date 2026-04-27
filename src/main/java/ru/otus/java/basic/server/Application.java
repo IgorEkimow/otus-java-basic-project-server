@@ -4,9 +4,9 @@ import lombok.extern.slf4j.Slf4j;
 import ru.otus.java.basic.server.config.ServerConfig;
 import ru.otus.java.basic.server.core.HttpServer;
 import ru.otus.java.basic.server.core.ServletContext;
+import ru.otus.java.basic.server.handler.ApiInfoServlet;
 import ru.otus.java.basic.server.handler.ErrorHandler;
 import ru.otus.java.basic.server.handler.ItemHandler;
-import ru.otus.java.basic.server.handler.StaticFileHandler;
 import ru.otus.java.basic.server.repository.ItemRepository;
 import javax.sql.DataSource;
 import com.zaxxer.hikari.HikariConfig;
@@ -26,20 +26,15 @@ public class Application {
             ItemRepository.initializeSchema(dataSource);
             ItemRepository itemRepository = new ItemRepository(dataSource);
             ItemHandler itemHandler = new ItemHandler(itemRepository);
-            StaticFileHandler staticFileHandler = new StaticFileHandler(config.getStaticFilesPath());
-            ErrorHandler errorHandler = new ErrorHandler(config.getStaticFilesPath());
+            ErrorHandler errorHandler = new ErrorHandler();
 
             HttpServer server = new HttpServer(config);
             ServletContext servletContext = server.getServletContext();
             servletContext.addServlet("itemServlet", itemHandler);
             servletContext.addMapping("itemServlet", "/items/{id}");
             servletContext.addMapping("itemServlet", "/items");
-            servletContext.addServlet("staticServlet", staticFileHandler);
-            servletContext.addMapping("staticServlet", "/static/*");
-            servletContext.addMapping("staticServlet", "/");
-            servletContext.addMapping("staticServlet", "/index.html");
-            servletContext.addMapping("staticServlet", "/favicon.ico");
-
+            servletContext.addServlet("apiInfoServlet", new ApiInfoServlet());
+            servletContext.addMapping("apiInfoServlet", "/");
             server.setErrorHandler(errorHandler);
 
             Runtime.getRuntime().addShutdownHook(new Thread(() -> {

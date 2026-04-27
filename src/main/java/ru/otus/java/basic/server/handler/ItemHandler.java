@@ -22,22 +22,13 @@ public class ItemHandler extends HttpServlet {
         String path = request.getPath();
         String id = request.getPathVariable("id");
 
-        MediaType acceptType = request.getAcceptType();
-        if (!acceptType.equals(MediaType.ALL) && !acceptType.isCompatible(MediaType.APPLICATION_JSON) && !acceptType.isCompatible(MediaType.TEXT_HTML)) {
-            response.setStatus(HttpStatus.NOT_ACCEPTABLE);
-            response.setJsonBody("{\"error\": \"Not Acceptable\"}");
-            return;
-        }
+        response.setContentType(MediaType.APPLICATION_JSON);
 
         if (id != null) {
             Optional<Item> item = itemRepository.findById(Long.parseLong(id));
             if (item.isPresent()) {
                 response.setStatus(HttpStatus.OK);
-                if (acceptType.isCompatible(MediaType.TEXT_HTML)) {
-                    response.setHtmlBody(generateItemHtml(item.get()));
-                } else {
-                    response.setJsonBody(JsonParser.toJson(item.get()));
-                }
+                response.setJsonBody(JsonParser.toJson(item.get()));
             } else {
                 response.setStatus(HttpStatus.NOT_FOUND);
                 response.setJsonBody("{\"error\": \"Item not found\"}");
@@ -56,17 +47,15 @@ public class ItemHandler extends HttpServlet {
             } else {
                 List<Item> items = itemRepository.findAll();
                 response.setStatus(HttpStatus.OK);
-                if (acceptType.isCompatible(MediaType.TEXT_HTML)) {
-                    response.setHtmlBody(generateItemsHtml(items));
-                } else {
-                    response.setJsonBody(JsonParser.toJson(items));
-                }
+                response.setJsonBody(JsonParser.toJson(items));
             }
         }
     }
 
     @Override
     protected void doPost(HttpRequest request, HttpResponse response) {
+        response.setContentType(MediaType.APPLICATION_JSON);
+
         String body = request.getBodyAsString();
         if (body == null || body.isEmpty()) {
             response.setStatus(HttpStatus.BAD_REQUEST);
@@ -88,6 +77,8 @@ public class ItemHandler extends HttpServlet {
 
     @Override
     protected void doPut(HttpRequest request, HttpResponse response) {
+        response.setContentType(MediaType.APPLICATION_JSON);
+
         String body = request.getBodyAsString();
         if (body == null || body.isEmpty()) {
             response.setStatus(HttpStatus.BAD_REQUEST);
@@ -122,6 +113,8 @@ public class ItemHandler extends HttpServlet {
 
     @Override
     protected void doDelete(HttpRequest request, HttpResponse response) {
+        response.setContentType(MediaType.APPLICATION_JSON);
+
         String id = request.getPathVariable("id");
         if (id == null) {
             id = request.getQueryParam("id");
@@ -136,7 +129,7 @@ public class ItemHandler extends HttpServlet {
         boolean deleted = itemRepository.delete(Long.parseLong(id));
         if (deleted) {
             response.setStatus(HttpStatus.NO_CONTENT);
-            response.setJsonBody("{\"message\": \"Item deleted\"}");
+            response.setBody(new byte[0]);
         } else {
             response.setStatus(HttpStatus.NOT_FOUND);
             response.setJsonBody("{\"error\": \"Item not found\"}");
@@ -146,87 +139,5 @@ public class ItemHandler extends HttpServlet {
     @Override
     protected String getSupportedMethods() {
         return "GET, POST, PUT, DELETE, OPTIONS";
-    }
-
-    private String generateItemsHtml(List<Item> items) {
-        StringBuilder html = new StringBuilder("""
-            <!DOCTYPE html>
-            <html>
-            <head>
-                <meta charset="UTF-8">
-                <title>Items List</title>
-                <link rel="stylesheet" href="/static/style.css">
-            </head>
-            <body>
-                <div class="container">
-                    <h1>Items List</h1>
-                    <table>
-                        <tr>
-                            <th>ID</th>
-                            <th>Name</th>
-                            <th>Description</th>
-                            <th>Price</th>
-                            <th>Category</th>
-                            <th>Quantity</th>
-                        </tr>
-        """);
-
-        for (Item item : items) {
-            html.append("<tr>")
-                .append("<td>").append(item.getId()).append("</td>")
-                .append("<td>").append(item.getName()).append("</td>")
-                .append("<td>").append(item.getDescription()).append("</td>")
-                .append("<td>").append(item.getPrice()).append("</td>")
-                .append("<td>").append(item.getCategory()).append("</td>")
-                .append("<td>").append(item.getQuantity()).append("</td>")
-            .append("</tr>");
-        }
-
-        html.append("""
-                    </table>
-                    <a href="/">Back to Home</a>
-                </div>
-            </body>
-            </html>
-        """);
-
-        return html.toString();
-    }
-
-    private String generateItemHtml(Item item) {
-        return String.format("""
-            <!DOCTYPE html>
-            <html>
-            <head>
-                <meta charset="UTF-8">
-                <title>Item Details</title>
-                <link rel="stylesheet" href="/static/style.css">
-            </head>
-            <body>
-                <div class="container">
-                    <h1>Item Details</h1>
-                    <div>
-                        <p><strong>ID:</strong> %d</p>
-                        <p><strong>Name:</strong> %s</p>
-                        <p><strong>Description:</strong> %s</p>
-                        <p><strong>Price:</strong> %s</p>
-                        <p><strong>Category:</strong> %s</p>
-                        <p><strong>Quantity:</strong> %d</p>
-                        <p><strong>Created:</strong> %s</p>
-                        <p><strong>Updated:</strong> %s</p>
-                    </div>
-                    <a href="/items">Back to List</a>
-                </div>
-            </body>
-            </html>
-        """,
-        item.getId(),
-        item.getName(),
-        item.getDescription() != null ? item.getDescription() : "",
-        item.getPrice(),
-        item.getCategory() != null ? item.getCategory() : "",
-        item.getQuantity() != null ? item.getQuantity() : 0,
-        item.getCreatedAt(),
-        item.getUpdatedAt());
     }
 }
