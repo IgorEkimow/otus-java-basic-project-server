@@ -158,17 +158,18 @@ public class ItemHandler extends HttpServlet {
                 <link rel="stylesheet" href="/static/style.css">
             </head>
             <body>
-                <h1>Items List</h1>
-                <table>
-                    <tr>
-                        <th>ID</th>
-                        <th>Name</th>
-                        <th>Description</th>
-                        <th>Price</th>
-                        <th>Category</th>
-                        <th>Quantity</th>
-                    </tr>
-            """);
+                <div class="container">
+                    <h1>Items List</h1>
+                    <table>
+                        <tr>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Description</th>
+                            <th>Price</th>
+                            <th>Category</th>
+                            <th>Quantity</th>
+                        </tr>
+        """);
 
         for (Item item : items) {
             html.append("<tr>")
@@ -182,11 +183,12 @@ public class ItemHandler extends HttpServlet {
         }
 
         html.append("""
-                </table>
-                <a href="/">Back to Home</a>
+                    </table>
+                    <a href="/">Back to Home</a>
+                </div>
             </body>
             </html>
-            """);
+        """);
 
         return html.toString();
     }
@@ -201,29 +203,30 @@ public class ItemHandler extends HttpServlet {
                 <link rel="stylesheet" href="/static/style.css">
             </head>
             <body>
-                <h1>Item Details</h1>
-                <div>
-                    <p><strong>ID:</strong> %d</p>
-                    <p><strong>Name:</strong> %s</p>
-                    <p><strong>Description:</strong> %s</p>
-                    <p><strong>Price:</strong> %s</p>
-                    <p><strong>Category:</strong> %s</p>
-                    <p><strong>Quantity:</strong> %d</p>
-                    <p><strong>Created:</strong> %s</p>
-                    <p><strong>Updated:</strong> %s</p>
+                <div class="container">
+                    <h1>Item Details</h1>
+                    <div>
+                        <p><strong>ID:</strong> %d</p>
+                        <p><strong>Name:</strong> %s</p>
+                        <p><strong>Description:</strong> %s</p>
+                        <p><strong>Price:</strong> %s</p>
+                        <p><strong>Category:</strong> %s</p>
+                        <p><strong>Quantity:</strong> %d</p>
+                        <p><strong>Created:</strong> %s</p>
+                        <p><strong>Updated:</strong> %s</p>
+                    </div>
+                    <a href="/items">Back to List</a>
                 </div>
-                <a href="/items">Back to List</a>
             </body>
             </html>
-            """,
-                item.getId(),
-                item.getName(),
-                item.getDescription() != null ? item.getDescription() : "",
-                item.getPrice(),
-                item.getCategory() != null ? item.getCategory() : "",
-                item.getQuantity() != null ? item.getQuantity() : 0,
-                item.getCreatedAt(),
-                item.getUpdatedAt()
-        );
+        """,
+        item.getId(),
+        item.getName(),
+        item.getDescription() != null ? item.getDescription() : "",
+        item.getPrice(),
+        item.getCategory() != null ? item.getCategory() : "",
+        item.getQuantity() != null ? item.getQuantity() : 0,
+        item.getCreatedAt(),
+        item.getUpdatedAt());
     }
 }

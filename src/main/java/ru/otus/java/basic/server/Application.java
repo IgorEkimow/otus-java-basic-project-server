@@ -33,9 +33,12 @@ public class Application {
             ServletContext servletContext = server.getServletContext();
             servletContext.addServlet("itemServlet", itemHandler);
             servletContext.addMapping("itemServlet", "/items/{id}");
-            servletContext.addMapping("itemServlet", "/items/*");
+            servletContext.addMapping("itemServlet", "/items");
             servletContext.addServlet("staticServlet", staticFileHandler);
             servletContext.addMapping("staticServlet", "/static/*");
+            servletContext.addMapping("staticServlet", "/");
+            servletContext.addMapping("staticServlet", "/index.html");
+            servletContext.addMapping("staticServlet", "/favicon.ico");
 
             server.setErrorHandler(errorHandler);
 
