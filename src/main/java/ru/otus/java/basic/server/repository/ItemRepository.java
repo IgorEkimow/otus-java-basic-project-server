@@ -33,7 +33,6 @@ public class ItemRepository {
         try (Connection conn = dataSource.getConnection();
             Statement stmt = conn.createStatement()) {
             stmt.execute(sql);
-            log.info("Database schema initialized successfully");
         } catch (SQLException e) {
             log.error("Failed to initialize database schema", e);
             throw new RuntimeException("Database initialization failed", e);

@@ -11,6 +11,7 @@ import ru.otus.java.basic.server.repository.ItemRepository;
 import javax.sql.DataSource;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
+import ru.otus.java.basic.server.servlet.RootRedirectServlet;
 
 @Slf4j
 public class Application {
@@ -25,20 +26,26 @@ public class Application {
             DataSource dataSource = createDataSource(config);
             ItemRepository.initializeSchema(dataSource);
             ItemRepository itemRepository = new ItemRepository(dataSource);
-            ItemHandler itemHandler = new ItemHandler(itemRepository);
-            ErrorHandler errorHandler = new ErrorHandler();
+            ErrorHandler errorHandler = new ErrorHandler(config.getApiBasePath());
 
             HttpServer server = new HttpServer(config);
             ServletContext servletContext = server.getServletContext();
-            servletContext.addServlet("itemServlet", itemHandler);
-            servletContext.addMapping("itemServlet", "/items/{id}");
-            servletContext.addMapping("itemServlet", "/items");
-            servletContext.addServlet("apiInfoServlet", new ApiInfoServlet());
-            servletContext.addMapping("apiInfoServlet", "/");
+            String basePath = config.getApiBasePath();
+
+            servletContext.addServlet("itemServlet", new ItemHandler(itemRepository, config.getApiBasePath()));
+            servletContext.addMapping("itemServlet", basePath + "/items/{id}");
+            servletContext.addMapping("itemServlet", basePath + "/items");
+
+            servletContext.addServlet("apiInfoServlet", new ApiInfoServlet(config.getApiVersion(), basePath));
+            servletContext.addMapping("apiInfoServlet", basePath + "/");
+            servletContext.addMapping("apiInfoServlet", basePath);
+
+            servletContext.addServlet("rootRedirect", new RootRedirectServlet(basePath));
+            servletContext.addMapping("rootRedirect", "/");
+
             server.setErrorHandler(errorHandler);
 
             Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-                log.info("Shutting down server...");
                 server.stop();
                 if (dataSource instanceof HikariDataSource hds) {
                     hds.close();

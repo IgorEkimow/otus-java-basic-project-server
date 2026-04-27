@@ -7,14 +7,17 @@ import ru.otus.java.basic.server.repository.ItemRepository;
 import ru.otus.java.basic.server.servlet.HttpServlet;
 import ru.otus.java.basic.server.util.JsonParser;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Slf4j
 public class ItemHandler extends HttpServlet {
     private final ItemRepository itemRepository;
+    private final String apiBasePath;
 
-    public ItemHandler(ItemRepository itemRepository) {
+    public ItemHandler(ItemRepository itemRepository, String apiBasePath) {
         this.itemRepository = itemRepository;
+        this.apiBasePath = apiBasePath;
     }
 
     @Override
@@ -31,7 +34,7 @@ public class ItemHandler extends HttpServlet {
                 response.setJsonBody(JsonParser.toJson(item.get()));
             } else {
                 response.setStatus(HttpStatus.NOT_FOUND);
-                response.setJsonBody("{\"error\": \"Item not found\"}");
+                response.setJsonBody(createErrorResponse("Item not found", apiBasePath + "/items/" + id));
             }
         } else {
             String queryId = request.getQueryParam("id");
@@ -42,7 +45,7 @@ public class ItemHandler extends HttpServlet {
                     response.setJsonBody(JsonParser.toJson(item.get()));
                 } else {
                     response.setStatus(HttpStatus.NOT_FOUND);
-                    response.setJsonBody("{\"error\": \"Item not found\"}");
+                    response.setJsonBody(createErrorResponse("Item not found", apiBasePath + "/items?id=" + queryId));
                 }
             } else {
                 List<Item> items = itemRepository.findAll();
@@ -59,7 +62,7 @@ public class ItemHandler extends HttpServlet {
         String body = request.getBodyAsString();
         if (body == null || body.isEmpty()) {
             response.setStatus(HttpStatus.BAD_REQUEST);
-            response.setJsonBody("{\"error\": \"Empty request body\"}");
+            response.setJsonBody(createErrorResponse("Empty request body", apiBasePath + "/items"));
             return;
         }
 
@@ -71,7 +74,7 @@ public class ItemHandler extends HttpServlet {
         } catch (Exception e) {
             log.error("Error creating item", e);
             response.setStatus(HttpStatus.BAD_REQUEST);
-            response.setJsonBody("{\"error\": \"Invalid request body\"}");
+            response.setJsonBody(createErrorResponse("Invalid request body", apiBasePath + "/items"));
         }
     }
 
@@ -82,7 +85,7 @@ public class ItemHandler extends HttpServlet {
         String body = request.getBodyAsString();
         if (body == null || body.isEmpty()) {
             response.setStatus(HttpStatus.BAD_REQUEST);
-            response.setJsonBody("{\"error\": \"Empty request body\"}");
+            response.setJsonBody(createErrorResponse("Empty request body", apiBasePath + "/items"));
             return;
         }
 
@@ -90,14 +93,14 @@ public class ItemHandler extends HttpServlet {
             Item item = JsonParser.fromJson(body, Item.class);
             if (item.getId() == null) {
                 response.setStatus(HttpStatus.BAD_REQUEST);
-                response.setJsonBody("{\"error\": \"Item id is required\"}");
+                response.setJsonBody(createErrorResponse("Item id is required", apiBasePath + "/items"));
                 return;
             }
 
             Optional<Item> existing = itemRepository.findById(item.getId());
             if (existing.isEmpty()) {
                 response.setStatus(HttpStatus.NOT_FOUND);
-                response.setJsonBody("{\"error\": \"Item not found\"}");
+                response.setJsonBody(createErrorResponse("Item not found", apiBasePath + "/items/" + item.getId()));
                 return;
             }
 
@@ -107,7 +110,7 @@ public class ItemHandler extends HttpServlet {
         } catch (Exception e) {
             log.error("Error updating item", e);
             response.setStatus(HttpStatus.BAD_REQUEST);
-            response.setJsonBody("{\"error\": \"Invalid request body\"}");
+            response.setJsonBody(createErrorResponse("Invalid request body", apiBasePath + "/items"));
         }
     }
 
@@ -122,7 +125,7 @@ public class ItemHandler extends HttpServlet {
 
         if (id == null) {
             response.setStatus(HttpStatus.BAD_REQUEST);
-            response.setJsonBody("{\"error\": \"Item id is required\"}");
+            response.setJsonBody(createErrorResponse("Item id is required", apiBasePath + "/items"));
             return;
         }
 
@@ -132,8 +135,16 @@ public class ItemHandler extends HttpServlet {
             response.setBody(new byte[0]);
         } else {
             response.setStatus(HttpStatus.NOT_FOUND);
-            response.setJsonBody("{\"error\": \"Item not found\"}");
+            response.setJsonBody(createErrorResponse("Item not found", apiBasePath + "/items/" + id));
         }
+    }
+
+    private String createErrorResponse(String message, String path) {
+        return JsonParser.toJson(Map.of(
+            "error", message,
+            "path", path,
+            "api_version", apiBasePath
+        ));
     }
 
     @Override

@@ -7,11 +7,18 @@ import java.util.Map;
 
 @Slf4j
 public class ErrorHandler {
+    private final String apiBasePath;
+
+    public ErrorHandler(String apiBasePath) {
+        this.apiBasePath = apiBasePath;
+    }
+
     public byte[] handleError(HttpStatus status) {
         Map<String, Object> errorResponse = Map.of(
             "status", status.code(),
             "error", status.reason(),
-            "message", getErrorMessage(status)
+            "message", getErrorMessage(status),
+            "api_base_path", apiBasePath
         );
 
         String json = JsonParser.toJson(errorResponse);

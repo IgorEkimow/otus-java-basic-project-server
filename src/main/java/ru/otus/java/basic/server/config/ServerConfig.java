@@ -20,6 +20,8 @@ public class ServerConfig {
     private String dbUsername;
     private String dbPassword;
     private int dbPoolSize;
+    private String apiVersion;
+    private String apiBasePath;
 
     private ServerConfig() {}
 
@@ -42,6 +44,12 @@ public class ServerConfig {
                 config.dbUsername = props.getProperty("db.username", "server_user");
                 config.dbPassword = props.getProperty("db.password", "server_pass");
                 config.dbPoolSize = Integer.parseInt(props.getProperty("db.pool.size", "5"));
+                config.apiVersion = props.getProperty("api.version", "v1");
+                config.apiBasePath = props.getProperty("api.base-path", "/api/" + config.apiVersion);
+
+                if (config.apiBasePath.contains("${api.version}")) {
+                    config.apiBasePath = config.apiBasePath.replace("${api.version}", config.apiVersion);
+                }
 
                 log.info("Configuration loaded successfully");
             } else {
@@ -68,5 +76,7 @@ public class ServerConfig {
         config.dbUsername = "server_user";
         config.dbPassword = "server_pass";
         config.dbPoolSize = 5;
+        config.apiVersion = "v1";
+        config.apiBasePath = "/api/v1";
     }
 }
