@@ -155,7 +155,7 @@ public class ItemHandler extends HttpServlet {
             <head>
                 <meta charset="UTF-8">
                 <title>Items List</title>
-                <link rel="stylesheet" href="/style.css">
+                <link rel="stylesheet" href="/static/style.css">
             </head>
             <body>
                 <h1>Items List</h1>
@@ -198,7 +198,7 @@ public class ItemHandler extends HttpServlet {
             <head>
                 <meta charset="UTF-8">
                 <title>Item Details</title>
-                <link rel="stylesheet" href="/style.css">
+                <link rel="stylesheet" href="/static/style.css">
             </head>
             <body>
                 <h1>Item Details</h1>
