@@ -4,7 +4,6 @@ import ru.otus.java.basic.server.http.HttpMethod;
 import ru.otus.java.basic.server.servlet.Servlet;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.regex.Pattern;
 
 public class ServletContext {
     private final Map<String, ServletRegistration> servlets = new ConcurrentHashMap<>();
@@ -20,7 +19,12 @@ public class ServletContext {
         if (registration != null) {
             Servlet servlet = registration.servlet();
             mappings.add(new ServletMapping(servlet, urlPattern));
+            sortMappings();
         }
+    }
+
+    private void sortMappings() {
+        mappings.sort(Comparator.comparingInt(ServletMapping::getPriority).thenComparingInt(m -> -m.getPattern().length()));
     }
 
     public Optional<ServletMatch> findServlet(String path) {
@@ -51,45 +55,89 @@ public class ServletContext {
     private static class ServletMapping {
         private final Servlet servlet;
         private final String pattern;
+        private final int priority;
+        private final java.util.regex.Pattern compiledPattern;
+        private final List<String> paramNames;
 
         public ServletMapping(Servlet servlet, String pattern) {
             this.servlet = servlet;
             this.pattern = pattern;
+            this.priority = calculatePriority(pattern);
+            this.paramNames = extractParamNames(pattern);
+            this.compiledPattern = compilePattern(pattern);
         }
 
         public Servlet servlet() {
             return servlet;
         }
 
-        public Map<String, String> match(String path) {
-            String regex = pattern.replaceAll("\\{[^/]+\\}", "([^/]+)");
+        public String getPattern() {
+            return pattern;
+        }
+
+        public int getPriority() {
+            return priority;
+        }
+
+        private static int calculatePriority(String pattern) {
+            if (pattern.contains("*")) {
+                return 2;
+            }
+
+            if (pattern.contains("{")) {
+                return 1;
+            }
+
+            return 0;
+        }
+
+        private static List<String> extractParamNames(String pattern) {
+            List<String> params = new ArrayList<>();
+            java.util.regex.Matcher matcher = java.util.regex.Pattern.compile("\\{([^/]+)\\}")
+                    .matcher(pattern);
+            while (matcher.find()) {
+                params.add(matcher.group(1));
+            }
+            return Collections.unmodifiableList(params);
+        }
+
+        private static java.util.regex.Pattern compilePattern(String pattern) {
+            String regex;
 
             if (pattern.endsWith("/*")) {
                 String basePattern = pattern.substring(0, pattern.length() - 2);
-                regex = basePattern.replaceAll("\\{[^/]+\\}", "([^/]+)");
-
-                if (path.equals(basePattern) || path.equals(basePattern + "/")) {
-                    return new HashMap<>();
-                }
-
-                regex = basePattern.replaceAll("\\{[^/]+\\}", "([^/]+)") + "/(.*)";
+                String baseRegex = basePattern.replaceAll("\\{([^/]+)\\}", "([^/]+)");
+                regex = "^" + baseRegex + "(?:/(.*))?$";
+            } else if (pattern.endsWith("/**")) {
+                String basePattern = pattern.substring(0, pattern.length() - 3);
+                String baseRegex = basePattern.replaceAll("\\{([^/]+)\\}", "([^/]+)");
+                regex = "^" + baseRegex + "(?:/.*)?$";
+            } else {
+                regex = "^" + pattern.replaceAll("\\{([^/]+)\\}", "([^/]+)") + "$";
             }
 
-            java.util.regex.Pattern compiledPattern = java.util.regex.Pattern.compile(regex);
+            return java.util.regex.Pattern.compile(regex);
+        }
+
+        public Map<String, String> match(String path) {
             java.util.regex.Matcher matcher = compiledPattern.matcher(path);
 
             if (matcher.matches()) {
                 Map<String, String> pathVariables = new HashMap<>();
-                java.util.regex.Matcher paramMatcher = java.util.regex.Pattern.compile("\\{([^/]+)\\}").matcher(pattern);
 
-                int groupIndex = 1;
-                while (paramMatcher.find()) {
-                    if (groupIndex <= matcher.groupCount()) {
-                        String paramName = paramMatcher.group(1);
-                        String paramValue = matcher.group(groupIndex);
+                for (int i = 0; i < paramNames.size(); i++) {
+                    String paramName = paramNames.get(i);
+                    String paramValue = matcher.group(i + 1);
+                    if (paramValue != null) {
                         pathVariables.put(paramName, paramValue);
                     }
-                    groupIndex++;
+                }
+
+                if (pattern.endsWith("/*") && matcher.groupCount() > paramNames.size()) {
+                    String wildcardMatch = matcher.group(paramNames.size() + 1);
+                    if (wildcardMatch != null && !wildcardMatch.isEmpty()) {
+                        pathVariables.put("*", wildcardMatch);
+                    }
                 }
 
                 return pathVariables;
