@@ -33,6 +33,19 @@ public class RequestHandler implements Runnable {
             HttpRequest request = ru.otus.java.basic.server.util.RequestParser.parse(input, config.getMaxRequestSize());
             HttpResponse response = new HttpResponse();
 
+            if (request.getMethod() == HttpMethod.OPTIONS) {
+                response.setStatus(HttpStatus.OK);
+                response.getHeaders().set("Access-Control-Allow-Origin", "*");
+                response.getHeaders().set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+                response.getHeaders().set("Access-Control-Allow-Headers", "Content-Type");
+                response.getHeaders().set("Access-Control-Max-Age", "86400");
+
+                byte[] responseBytes = response.toBytes();
+                output.write(responseBytes);
+                output.flush();
+                return;
+            }
+
             try {
                 router.route(request, response);
             } catch (NotFoundException e) {
@@ -56,12 +69,21 @@ public class RequestHandler implements Runnable {
                 response.setHtmlBody(new String(errorHandler.handleError(HttpStatus.METHOD_NOT_ALLOWED)));
             }
 
+            response.getHeaders().set("Access-Control-Allow-Origin", "*");
+            response.getHeaders().set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+            response.getHeaders().set("Access-Control-Allow-Headers", "Content-Type");
+
             byte[] responseBytes = response.toBytes();
             if (responseBytes.length > config.getMaxResponseSize()) {
                 log.warn("Response size exceeds maximum: {}", responseBytes.length);
                 HttpResponse errorResponse = new HttpResponse();
+
                 errorResponse.setStatus(HttpStatus.INTERNAL_SERVER_ERROR);
                 errorResponse.setBody("Response too large");
+                errorResponse.getHeaders().set("Access-Control-Allow-Origin", "*");
+                errorResponse.getHeaders().set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+                errorResponse.getHeaders().set("Access-Control-Allow-Headers", "Content-Type");
+
                 responseBytes = errorResponse.toBytes();
             }
 

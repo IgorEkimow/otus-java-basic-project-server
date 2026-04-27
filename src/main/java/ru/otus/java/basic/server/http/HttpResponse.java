@@ -16,14 +16,28 @@ public class HttpResponse {
         this.attributes = new HashMap<>();
     }
 
-    public HttpStatus getStatus() { return status; }
-    public void setStatus(HttpStatus status) { this.status = status; }
+    public HttpStatus getStatus() {
+        return status;
+    }
+    public void setStatus(HttpStatus status) {
+        this.status = status;
+    }
 
-    public HttpHeaders getHeaders() { return headers; }
-    public void setHeaders(HttpHeaders headers) { this.headers = headers; }
+    public HttpHeaders getHeaders() {
+        return headers;
+    }
 
-    public byte[] getBody() { return body; }
-    public void setBody(byte[] body) { this.body = body; }
+    public void setHeaders(HttpHeaders headers) {
+        this.headers = headers;
+    }
+
+    public byte[] getBody() {
+        return body;
+    }
+
+    public void setBody(byte[] body) {
+        this.body = body;
+    }
 
     public void setBody(String body) {
         this.body = body.getBytes(StandardCharsets.UTF_8);
@@ -59,13 +73,16 @@ public class HttpResponse {
         return attributes.get(name);
     }
 
+    public void enableCors() {
+        headers.set("Access-Control-Allow-Origin", "*");
+        headers.set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+        headers.set("Access-Control-Allow-Headers", "Content-Type");
+        headers.set("Access-Control-Max-Age", "86400");
+    }
+
     public byte[] toBytes() {
         StringBuilder headerBuilder = new StringBuilder();
-        headerBuilder.append("HTTP/1.1 ")
-            .append(status.code())
-            .append(" ")
-            .append(status.reason())
-            .append("\r\n");
+        headerBuilder.append("HTTP/1.1 ").append(status.code()).append(" ").append(status.reason()).append("\r\n");
 
         setContentLength();
         headerBuilder.append(headers.toString());
