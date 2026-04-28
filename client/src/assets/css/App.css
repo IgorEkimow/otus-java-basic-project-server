@@ -5,8 +5,7 @@
 }
 
 body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-  'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   min-height: 100vh;
 }
@@ -208,7 +207,6 @@ body {
   background: #f56565;
 }
 
-/* Modal Styles */
 .modal {
   position: fixed;
   top: 0;
@@ -325,7 +323,6 @@ input:focus, textarea:focus {
   flex: 1;
 }
 
-/* Loading Spinner */
 .loading-container {
   display: flex;
   flex-direction: column;
@@ -351,16 +348,13 @@ input:focus, textarea:focus {
   }
 }
 
-/* Responsive */
 @media (max-width: 768px) {
   .items-grid {
     grid-template-columns: 1fr;
   }
-
   .form-row {
     grid-template-columns: 1fr;
   }
-
   .toolbar {
     flex-direction: column;
   }
