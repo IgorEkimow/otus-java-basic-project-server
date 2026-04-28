@@ -1,7 +1,7 @@
 services:
   postgres:
     image: postgres
-    container_name: otus-java-basic-project-server
+    container_name: pg-server-rest-api
     restart: always
     environment:
       POSTGRES_USER: server_user
@@ -10,7 +10,7 @@ services:
     ports:
       - "15432:5432"
     volumes:
-      - server_data:/var/lib/postgresql
+      - data:/var/lib/postgresql
 
 volumes:
-  server_data:
+  data:
