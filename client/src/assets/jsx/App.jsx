@@ -142,7 +142,7 @@ function App() {
         <div className="App">
             <header className="header">
                 <div className="header-content">
-                    <h1>📦 Item Management System</h1>
+                    <h1>📦 Client REST API</h1>
                     <p>REST API Demo with React + Java Backend</p>
                     <div className="api-info">🔗 API Endpoint: <code>{API_BASE_URL}</code></div>
                 </div>
