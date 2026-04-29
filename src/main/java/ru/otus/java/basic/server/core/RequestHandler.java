@@ -25,8 +25,8 @@ public class RequestHandler implements Runnable {
     @Override
     public void run() {
         try (clientSocket;
-             InputStream input = new BufferedInputStream(clientSocket.getInputStream());
-             OutputStream output = new BufferedOutputStream(clientSocket.getOutputStream())) {
+            InputStream input = new BufferedInputStream(clientSocket.getInputStream());
+            OutputStream output = new BufferedOutputStream(clientSocket.getOutputStream())) {
 
             clientSocket.setSoTimeout(30000);
 
@@ -43,6 +43,7 @@ public class RequestHandler implements Runnable {
                 byte[] responseBytes = response.toBytes();
                 output.write(responseBytes);
                 output.flush();
+
                 return;
             }
 

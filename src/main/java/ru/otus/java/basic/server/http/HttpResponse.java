@@ -19,6 +19,7 @@ public class HttpResponse {
     public HttpStatus getStatus() {
         return status;
     }
+
     public void setStatus(HttpStatus status) {
         this.status = status;
     }
@@ -94,6 +95,7 @@ public class HttpResponse {
             byte[] response = new byte[headerBytes.length + body.length];
             System.arraycopy(headerBytes, 0, response, 0, headerBytes.length);
             System.arraycopy(body, 0, response, headerBytes.length, body.length);
+
             return response;
         }
 

@@ -19,6 +19,7 @@ public class HttpHeaders {
 
     public String get(String name) {
         List<String> values = headers.get(name.toLowerCase());
+
         return values != null && !values.isEmpty() ? values.getFirst() : null;
     }
 
@@ -32,6 +33,7 @@ public class HttpHeaders {
 
     public MediaType getAccept() {
         String accept = get("accept");
+
         return MediaType.parse(accept);
     }
 
@@ -41,6 +43,7 @@ public class HttpHeaders {
 
     public int getContentLength() {
         String length = get("content-length");
+
         return length != null ? Integer.parseInt(length) : 0;
     }
 
@@ -54,6 +57,7 @@ public class HttpHeaders {
         headers.forEach((key, values) -> {
             values.forEach(value -> sb.append(key).append(": ").append(value).append("\r\n"));
         });
+
         return sb.toString();
     }
 }

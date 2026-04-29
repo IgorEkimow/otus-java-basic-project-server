@@ -75,6 +75,7 @@ public class RequestParser {
                 return i;
             }
         }
+
         return -1;
     }
 
@@ -100,6 +101,7 @@ public class RequestParser {
                 headers.add(name, value);
             }
         }
+
         request.setHeaders(headers);
     }
 }

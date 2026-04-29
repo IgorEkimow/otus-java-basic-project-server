@@ -22,6 +22,7 @@ public class ErrorHandler {
         );
 
         String json = JsonParser.toJson(errorResponse);
+
         return json.getBytes(java.nio.charset.StandardCharsets.UTF_8);
     }
 

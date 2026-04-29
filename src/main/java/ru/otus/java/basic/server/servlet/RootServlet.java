@@ -4,10 +4,10 @@ import ru.otus.java.basic.server.http.*;
 import ru.otus.java.basic.server.util.JsonParser;
 import java.util.Map;
 
-public class RootRedirectServlet extends HttpServlet {
+public class RootServlet extends HttpServlet {
     private final String apiBasePath;
 
-    public RootRedirectServlet(String apiBasePath) {
+    public RootServlet(String apiBasePath) {
         this.apiBasePath = apiBasePath;
     }
 

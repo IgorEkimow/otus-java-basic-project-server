@@ -74,6 +74,7 @@ public class HttpServer {
         }
 
         threadPool.shutdown();
+
         try {
             if (!threadPool.awaitTermination(5, TimeUnit.SECONDS)) {
                 threadPool.shutdownNow();

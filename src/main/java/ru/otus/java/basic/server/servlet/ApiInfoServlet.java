@@ -1,7 +1,6 @@
-package ru.otus.java.basic.server.handler;
+package ru.otus.java.basic.server.servlet;
 
 import ru.otus.java.basic.server.http.*;
-import ru.otus.java.basic.server.servlet.HttpServlet;
 import ru.otus.java.basic.server.util.JsonParser;
 import java.util.Map;
 

@@ -26,11 +26,13 @@ public class Router {
 
             if (!isMethodSupported(servletMatch, request.getMethod())) {
                 response.setStatus(HttpStatus.METHOD_NOT_ALLOWED);
+
                 return;
             }
 
             if (request.getMethod() == HttpMethod.GET && !isAcceptable(request)) {
                 response.setStatus(HttpStatus.NOT_ACCEPTABLE);
+
                 return;
             }
 
@@ -46,6 +48,7 @@ public class Router {
 
     private boolean isAcceptable(HttpRequest request) {
         MediaType acceptType = request.getAcceptType();
+        
         return acceptType != null;
     }
 }

@@ -42,6 +42,7 @@ public record MediaType(String type, String subtype) {
         if (parts.length == 2) {
             return new MediaType(parts[0].trim(), parts[1].trim().split(";")[0].trim());
         }
+
         return ALL;
     }
 

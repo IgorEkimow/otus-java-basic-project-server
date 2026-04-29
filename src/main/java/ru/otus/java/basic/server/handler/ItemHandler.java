@@ -63,6 +63,7 @@ public class ItemHandler extends HttpServlet {
         if (body == null || body.isEmpty()) {
             response.setStatus(HttpStatus.BAD_REQUEST);
             response.setJsonBody(createErrorResponse("Empty request body", apiBasePath + "/items"));
+
             return;
         }
 
@@ -86,6 +87,7 @@ public class ItemHandler extends HttpServlet {
         if (body == null || body.isEmpty()) {
             response.setStatus(HttpStatus.BAD_REQUEST);
             response.setJsonBody(createErrorResponse("Empty request body", apiBasePath + "/items"));
+
             return;
         }
 
@@ -94,6 +96,7 @@ public class ItemHandler extends HttpServlet {
             if (item.getId() == null) {
                 response.setStatus(HttpStatus.BAD_REQUEST);
                 response.setJsonBody(createErrorResponse("Item id is required", apiBasePath + "/items"));
+
                 return;
             }
 
@@ -101,6 +104,7 @@ public class ItemHandler extends HttpServlet {
             if (existing.isEmpty()) {
                 response.setStatus(HttpStatus.NOT_FOUND);
                 response.setJsonBody(createErrorResponse("Item not found", apiBasePath + "/items/" + item.getId()));
+
                 return;
             }
 
@@ -126,6 +130,7 @@ public class ItemHandler extends HttpServlet {
         if (id == null) {
             response.setStatus(HttpStatus.BAD_REQUEST);
             response.setJsonBody(createErrorResponse("Item id is required", apiBasePath + "/items"));
+
             return;
         }
 

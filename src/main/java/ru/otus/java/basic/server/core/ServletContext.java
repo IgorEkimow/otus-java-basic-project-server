@@ -34,6 +34,7 @@ public class ServletContext {
                 return Optional.of(new ServletMatch(mapping.servlet(), pathVariables));
             }
         }
+
         return Optional.empty();
     }
 
@@ -49,8 +50,7 @@ public class ServletContext {
         servlets.values().forEach(reg -> reg.servlet().destroy());
     }
 
-    private record ServletRegistration(String name, Servlet servlet) {
-    }
+    private record ServletRegistration(String name, Servlet servlet) {}
 
     private static class ServletMapping {
         private final Servlet servlet;
@@ -93,11 +93,11 @@ public class ServletContext {
 
         private static List<String> extractParamNames(String pattern) {
             List<String> params = new ArrayList<>();
-            java.util.regex.Matcher matcher = java.util.regex.Pattern.compile("\\{([^/]+)\\}")
-                    .matcher(pattern);
+            java.util.regex.Matcher matcher = java.util.regex.Pattern.compile("\\{([^/]+)\\}").matcher(pattern);
             while (matcher.find()) {
                 params.add(matcher.group(1));
             }
+
             return Collections.unmodifiableList(params);
         }
 

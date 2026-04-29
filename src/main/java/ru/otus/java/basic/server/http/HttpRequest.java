@@ -21,27 +21,46 @@ public class HttpRequest {
         this.pathVariables = new HashMap<>();
     }
 
-    public HttpMethod getMethod() { return method; }
-    public void setMethod(HttpMethod method) { this.method = method; }
+    public HttpMethod getMethod() {
+        return method;
+    }
 
-    public String getUri() { return uri; }
+    public void setMethod(HttpMethod method) {
+        this.method = method;
+    }
+
+    public String getUri() {
+        return uri;
+    }
+
     public void setUri(String uri) {
         this.uri = uri;
         parseUri();
     }
 
-    public String getPath() { return path; }
-    public void setPath(String path) { this.path = path; }
+    public String getPath() {
+        return path;
+    }
 
-    public String getQueryString() { return queryString; }
+    public void setPath(String path) {
+        this.path = path;
+    }
 
-    public Map<String, String> getQueryParams() { return queryParams; }
+    public String getQueryString() {
+        return queryString;
+    }
+
+    public Map<String, String> getQueryParams() {
+        return queryParams;
+    }
 
     public String getQueryParam(String name) {
         return queryParams.get(name);
     }
 
-    public Map<String, String> getPathVariables() { return pathVariables; }
+    public Map<String, String> getPathVariables() {
+        return pathVariables;
+    }
 
     public void setPathVariable(String name, String value) {
         pathVariables.put(name, value);
@@ -51,14 +70,29 @@ public class HttpRequest {
         return pathVariables.get(name);
     }
 
-    public String getHttpVersion() { return httpVersion; }
-    public void setHttpVersion(String httpVersion) { this.httpVersion = httpVersion; }
+    public String getHttpVersion() {
+        return httpVersion;
+    }
 
-    public HttpHeaders getHeaders() { return headers; }
-    public void setHeaders(HttpHeaders headers) { this.headers = headers; }
+    public void setHttpVersion(String httpVersion) {
+        this.httpVersion = httpVersion;
+    }
 
-    public byte[] getBody() { return body; }
-    public void setBody(byte[] body) { this.body = body; }
+    public HttpHeaders getHeaders() {
+        return headers;
+    }
+
+    public void setHeaders(HttpHeaders headers) {
+        this.headers = headers;
+    }
+
+    public byte[] getBody() {
+        return body;
+    }
+
+    public void setBody(byte[] body) {
+        this.body = body;
+    }
 
     public String getBodyAsString() {
         return body != null ? new String(body, StandardCharsets.UTF_8) : null;
@@ -72,6 +106,7 @@ public class HttpRequest {
         if (uri == null) return;
 
         int queryIndex = uri.indexOf('?');
+
         if (queryIndex >= 0) {
             path = uri.substring(0, queryIndex);
             queryString = uri.substring(queryIndex + 1);

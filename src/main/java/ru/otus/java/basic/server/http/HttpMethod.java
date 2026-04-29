@@ -5,6 +5,7 @@ public enum HttpMethod {
 
     public static HttpMethod fromString(String method) {
         if (method == null) return null;
+
         try {
             return valueOf(method.toUpperCase());
         } catch (IllegalArgumentException e) {

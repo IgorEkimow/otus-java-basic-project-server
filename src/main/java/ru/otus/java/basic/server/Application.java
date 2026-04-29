@@ -4,7 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import ru.otus.java.basic.server.config.ServerConfig;
 import ru.otus.java.basic.server.core.HttpServer;
 import ru.otus.java.basic.server.core.ServletContext;
-import ru.otus.java.basic.server.handler.ApiInfoServlet;
+import ru.otus.java.basic.server.servlet.ApiInfoServlet;
 import ru.otus.java.basic.server.handler.ErrorHandler;
 import ru.otus.java.basic.server.handler.ItemHandler;
 import ru.otus.java.basic.server.handler.StaticFileHandler;
@@ -12,7 +12,7 @@ import ru.otus.java.basic.server.repository.ItemRepository;
 import javax.sql.DataSource;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
-import ru.otus.java.basic.server.servlet.RootRedirectServlet;
+import ru.otus.java.basic.server.servlet.RootServlet;
 
 @Slf4j
 public class Application {
@@ -28,7 +28,6 @@ public class Application {
             ItemRepository.initializeSchema(dataSource);
             ItemRepository itemRepository = new ItemRepository(dataSource);
             ErrorHandler errorHandler = new ErrorHandler(config.getApiBasePath());
-
             HttpServer server = new HttpServer(config);
             ServletContext servletContext = server.getServletContext();
             String basePath = config.getApiBasePath();
@@ -41,8 +40,8 @@ public class Application {
             servletContext.addMapping("apiInfoServlet", basePath + "/");
             servletContext.addMapping("apiInfoServlet", basePath);
 
-            servletContext.addServlet("rootRedirect", new RootRedirectServlet(basePath));
-            servletContext.addMapping("rootRedirect", "/");
+            servletContext.addServlet("rootServlet", new RootServlet(basePath));
+            servletContext.addMapping("rootServlet", "/");
 
             servletContext.addServlet("staticFileHandler", new StaticFileHandler(config.getStaticFilesPath()));
             servletContext.addMapping("staticFileHandler", "/*");

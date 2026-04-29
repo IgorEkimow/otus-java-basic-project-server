@@ -26,6 +26,7 @@ public class StaticFileHandler extends HttpServlet {
         if (fileName.contains("..") || fileName.contains(":/") || fileName.contains(":\\")) {
             response.setStatus(HttpStatus.BAD_REQUEST);
             response.setJsonBody("{\"error\": \"Invalid file path\"}");
+
             return;
         }
 
@@ -42,11 +43,13 @@ public class StaticFileHandler extends HttpServlet {
                     response.setStatus(HttpStatus.OK);
                     response.setContentType(mediaType);
                     response.setBody(fileContent);
+
                     return;
                 } catch (IOException e) {
                     log.error("Error reading static file from filesystem: {}", fileName, e);
                     response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR);
                     response.setJsonBody("{\"error\": \"Error reading file\"}");
+
                     return;
                 }
             }
@@ -74,6 +77,7 @@ public class StaticFileHandler extends HttpServlet {
         if (lastDotIndex > 0 && lastDotIndex < fileName.length() - 1) {
             return fileName.substring(lastDotIndex + 1).toLowerCase();
         }
+
         return "";
     }
 
