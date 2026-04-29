@@ -7,7 +7,7 @@ const API_BASE_URL = 'http://localhost:8080/api/v1';
 const api = axios.create({
     baseURL: API_BASE_URL,
     headers: {
-        'Content-Type': 'application/json',
+        'Content-Type': 'application/json'
     }
 });
 
@@ -32,7 +32,6 @@ function App() {
             setItems(response.data);
             setError(null);
         } catch (err) {
-            console.error('Error fetching items:', err);
             setError('Failed to load items. Make sure the server is running on port 8080');
         } finally {
             setLoading(false);
@@ -47,10 +46,11 @@ function App() {
         try {
             const response = await api.post('/items', itemData);
             setItems([...items, response.data]);
+
             return true;
         } catch (err) {
-            console.error('Error creating item:', err);
             setError('Failed to create item');
+
             return false;
         }
     };
@@ -59,10 +59,11 @@ function App() {
         try {
             const response = await api.put('/items', itemData);
             setItems(items.map(item => item.id === response.data.id ? response.data : item));
+
             return true;
         } catch (err) {
-            console.error('Error updating item:', err);
             setError('Failed to update item');
+
             return false;
         }
     };
@@ -74,7 +75,6 @@ function App() {
             await api.delete(`/items/${id}`);
             setItems(items.filter(item => item.id !== id));
         } catch (err) {
-            console.error('Error deleting item:', err);
             setError('Failed to delete item');
         }
     };
@@ -84,6 +84,7 @@ function App() {
 
         if (!formData.name || !formData.price) {
             setError('Name and Price are required');
+
             return;
         }
 
@@ -150,8 +151,8 @@ function App() {
 
             <div className="container">
                 <div className="toolbar">
-                    <button className="btn btn-primary" onClick={handleAddNew}>+  Add New Item</button>
-                    <button className="btn btn-secondary" onClick={fetchItems}>⭮ Refresh</button>
+                    <button className="btn btn-primary" onClick={handleAddNew}>Add New Item</button>
+                    <button className="btn btn-secondary" onClick={fetchItems}>Refresh</button>
                 </div>
 
                 {error && (<div className="error-message">❌ {error}</div>)}
