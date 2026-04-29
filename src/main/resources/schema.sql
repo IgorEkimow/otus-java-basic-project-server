@@ -6,9 +6,7 @@ CREATE TABLE IF NOT EXISTS items (
     description TEXT,
     price DECIMAL(10, 2) NOT NULL,
     category VARCHAR(100),
-    quantity INTEGER DEFAULT 0,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    quantity INTEGER DEFAULT 0
 );
 
 CREATE INDEX IF NOT EXISTS idx_items_category ON items(category);

@@ -24,7 +24,6 @@ public class ApiInfoServlet extends HttpServlet {
             "version", "1.0.0",
             "api_version", apiVersion,
             "base_path", apiBasePath,
-            "description", "Item Management REST API",
             "endpoints", Map.of(
                 "GET " + apiBasePath + "/items", "Get all items",
                 "GET " + apiBasePath + "/items/{id}", "Get item by ID",

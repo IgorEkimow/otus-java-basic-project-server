@@ -24,9 +24,7 @@ public class ItemRepository {
                 description TEXT,
                 price DECIMAL(10, 2) NOT NULL,
                 category VARCHAR(100),
-                quantity INTEGER DEFAULT 0,
-                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-                updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                quantity INTEGER DEFAULT 0
             );
         """;
 
@@ -167,8 +165,6 @@ public class ItemRepository {
             .price(rs.getBigDecimal("price"))
             .category(rs.getString("category"))
             .quantity(rs.getInt("quantity"))
-            .createdAt(rs.getTimestamp("created_at").toLocalDateTime())
-            .updatedAt(rs.getTimestamp("updated_at").toLocalDateTime())
             .build();
     }
 }

@@ -142,8 +142,7 @@ public class ItemHandler extends HttpServlet {
     private String createErrorResponse(String message, String path) {
         return JsonParser.toJson(Map.of(
             "error", message,
-            "path", path,
-            "api_version", apiBasePath
+            "path", path
         ));
     }
 

@@ -19,8 +19,8 @@ public class RootRedirectServlet extends HttpServlet {
         Map<String, Object> redirectInfo = Map.of(
             "message", "Please use the API",
             "api_base_path", apiBasePath,
-            "links", Map.of(
-                "api_info", apiBasePath + "/",
+            "routes", Map.of(
+                "info", apiBasePath + "/",
                 "items", apiBasePath + "/items"
             )
         );

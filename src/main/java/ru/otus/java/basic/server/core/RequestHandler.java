@@ -50,23 +50,23 @@ public class RequestHandler implements Runnable {
                 router.route(request, response);
             } catch (NotFoundException e) {
                 response.setStatus(HttpStatus.NOT_FOUND);
-                response.setHtmlBody(new String(errorHandler.handleError(HttpStatus.NOT_FOUND)));
+                response.setJsonBody(new String(errorHandler.handleError(HttpStatus.NOT_FOUND)));
             } catch (BadRequestException e) {
                 response.setStatus(HttpStatus.BAD_REQUEST);
-                response.setHtmlBody(new String(errorHandler.handleError(HttpStatus.BAD_REQUEST)));
+                response.setJsonBody(new String(errorHandler.handleError(HttpStatus.BAD_REQUEST)));
             } catch (MethodNotAllowedException e) {
                 response.setStatus(HttpStatus.METHOD_NOT_ALLOWED);
-                response.setHtmlBody(new String(errorHandler.handleError(HttpStatus.METHOD_NOT_ALLOWED)));
+                response.setJsonBody(new String(errorHandler.handleError(HttpStatus.METHOD_NOT_ALLOWED)));
             } catch (Exception e) {
                 log.error("Error processing request", e);
                 response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR);
-                response.setHtmlBody(new String(errorHandler.handleError(HttpStatus.INTERNAL_SERVER_ERROR)));
+                response.setJsonBody(new String(errorHandler.handleError(HttpStatus.INTERNAL_SERVER_ERROR)));
             }
 
             if (response.getStatus() == HttpStatus.NOT_FOUND && response.getBody() == null) {
-                response.setHtmlBody(new String(errorHandler.handleError(HttpStatus.NOT_FOUND)));
+                response.setJsonBody(new String(errorHandler.handleError(HttpStatus.NOT_FOUND)));
             } else if (response.getStatus() == HttpStatus.METHOD_NOT_ALLOWED && response.getBody() == null) {
-                response.setHtmlBody(new String(errorHandler.handleError(HttpStatus.METHOD_NOT_ALLOWED)));
+                response.setJsonBody(new String(errorHandler.handleError(HttpStatus.METHOD_NOT_ALLOWED)));
             }
 
             response.getHeaders().set("Access-Control-Allow-Origin", "*");

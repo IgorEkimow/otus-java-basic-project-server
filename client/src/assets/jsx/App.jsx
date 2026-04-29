@@ -142,7 +142,7 @@ function App() {
         <div className="App">
             <header className="header">
                 <div className="header-content">
-                    <h1>📦 Client REST API</h1>
+                    <h1>🏗️ Client REST API</h1>
                     <p>REST API Demo with React + Java Backend</p>
                     <div className="api-info">🔗 API Endpoint: <code>{API_BASE_URL}</code></div>
                 </div>
@@ -150,8 +150,8 @@ function App() {
 
             <div className="container">
                 <div className="toolbar">
-                    <button className="btn btn-primary" onClick={handleAddNew}>➕ Add New Item</button>
-                    <button className="btn btn-secondary" onClick={fetchItems}>🔄 Refresh</button>
+                    <button className="btn btn-primary" onClick={handleAddNew}>+  Add New Item</button>
+                    <button className="btn btn-secondary" onClick={fetchItems}>⭮ Refresh</button>
                 </div>
 
                 {error && (<div className="error-message">❌ {error}</div>)}
