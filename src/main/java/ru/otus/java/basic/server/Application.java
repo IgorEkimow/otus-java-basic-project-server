@@ -7,6 +7,7 @@ import ru.otus.java.basic.server.core.ServletContext;
 import ru.otus.java.basic.server.handler.ApiInfoServlet;
 import ru.otus.java.basic.server.handler.ErrorHandler;
 import ru.otus.java.basic.server.handler.ItemHandler;
+import ru.otus.java.basic.server.handler.StaticFileHandler;
 import ru.otus.java.basic.server.repository.ItemRepository;
 import javax.sql.DataSource;
 import com.zaxxer.hikari.HikariConfig;
@@ -42,6 +43,9 @@ public class Application {
 
             servletContext.addServlet("rootRedirect", new RootRedirectServlet(basePath));
             servletContext.addMapping("rootRedirect", "/");
+
+            servletContext.addServlet("staticFileHandler", new StaticFileHandler(config.getStaticFilesPath()));
+            servletContext.addMapping("staticFileHandler", "/*");
 
             server.setErrorHandler(errorHandler);
 
