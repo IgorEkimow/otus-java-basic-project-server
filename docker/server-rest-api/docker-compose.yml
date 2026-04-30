@@ -1,0 +1,20 @@
+services:
+  postgres:
+    image: postgres
+    container_name: postgres
+    restart: always
+    environment:
+      POSTGRES_USER: server_user
+      POSTGRES_PASSWORD: server_pass
+      POSTGRES_DB: server_db
+    ports:
+      - "15432:5432"
+    volumes:
+      - data:/var/lib/postgresql
+    networks:
+      - app-network
+volumes:
+  data:
+networks:
+  app-network:
+    driver: bridge
